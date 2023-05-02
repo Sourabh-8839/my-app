@@ -100,22 +100,27 @@ function showOnScreen(myobj) {
     
         userList.removeChild(li);
         }
-    
+     }
+
     //edit click function
-     editBtn.onclick=async ()=>{
+     editBtn.onclick = async () =>{
         // localStorage.removeItem(myobj.email);
 
-        await axiosInstance.put(`/appoinmentData/${myobj._id}`)
+        // await axiosInstance.put(`/appoinmentData/${myobj._id}`)
         
         axiosInstance.delete(`/appoinmentData/${myobj._id}`)
+        .then();
+
         userList.removeChild(li);
 
         inputName.value=myobj.name;
         emailId.value=myobj.email;
         phone.value =myobj.phone;
 
+        
+
     }
-}
+
 }
 
 
