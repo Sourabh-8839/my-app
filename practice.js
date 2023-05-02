@@ -11,14 +11,10 @@ const phone = document.querySelector('#phone');
 
 const userList = document.querySelector('#users');
 
-const axiosInstance = axios.create({ baseURL: 'https://crudcrud.com/api/ece94eb110c34e43b265cc354d9861f4' })
+const axiosInstance = axios.create({ baseURL: 'https://crudcrud.com/api/6b4c772d44564f08866929b36aab97f6' })
 
 
-let myobj = {
-    name: inputName.value,
-    email: emailId.value,
-    phone: phone.value,
-}
+
 
 
 form.addEventListener('submit', onSubmit);
@@ -29,8 +25,9 @@ window.addEventListener('DOMContentLoaded',()=>{
 
         for(let i =0;i<res.data.length;i++){
         showOnScreen(res.data[i]);
+        // console.log(res.data[i]._id);
         }
-        console.log(res);
+        
     })
     .catch(err=>console.log(err));
 });
@@ -47,10 +44,16 @@ function onSubmit(e) {
         setTimeout(() => msg.remove(), 3000);
     }
     else { 
+        let myobj = {
+            name: inputName.value,
+            email: emailId.value,
+            phone: phone.value,
+        }
+
             axiosInstance.post('/appoinmentData', myobj)
                 .then((response) => {
-                    showOnScreen(myobj);
-                    console.log(response)
+                    showOnScreen(response.data);
+                    // console.log(response.data)
                 })
                 .catch((err) => console.log(err));
 
@@ -66,8 +69,6 @@ function onSubmit(e) {
 
 
 function showOnScreen(myobj) {
-
-    console.log(myobj.name);
       
     const li =document.createElement('li');
     //deletebutton
@@ -90,18 +91,23 @@ function showOnScreen(myobj) {
 
     userList.appendChild(li);
 
-     //delete functinality
+     //delete functionality
      btn.onclick= () =>{
         if(confirm('Are you sure')){
             
         // localStorage.removeItem(myobj.email);
-        // axiosInstance.delete('/appoinmentData',)
+        axiosInstance.delete(`/appoinmentData/${myobj._id}`)
+    
         userList.removeChild(li);
         }
     
     //edit click function
-    editBtn.onclick=()=>{
-        localStorage.removeItem(myobj.email);
+     editBtn.onclick=async ()=>{
+        // localStorage.removeItem(myobj.email);
+
+        await axiosInstance.put(`/appoinmentData/${myobj._id}`)
+        
+        axiosInstance.delete(`/appoinmentData/${myobj._id}`)
         userList.removeChild(li);
 
         inputName.value=myobj.name;
